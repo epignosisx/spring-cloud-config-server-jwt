@@ -1,6 +1,8 @@
 # Spring Cloud Config Server with JWT security
 A docker image of [Spring Cloud Config Server](https://cloud.spring.io/spring-cloud-static/spring-cloud-config/2.1.2.RELEASE/single/spring-cloud-config.html) with JWT security.
 
+Based on the [hyness/spring-cloud-config-server](https://hub.docker.com/r/hyness/spring-cloud-config-server/) docker image.
+
 The JWT support is as follows: 
 
 - Update the application.yml to have a `jwt.secret=the-signing-key` with the JWT signing key or use environment variable `JWT_SECRET=the-signing-key`.
@@ -8,7 +10,7 @@ The JWT support is as follows:
   ```json
   {
     "sub": "app1",
-    "scope": ["/shared,app1/dev/**", "/shared,app1/qa/**"]
+    "scope": ["/app1/dev/**", "/app1/qa/**"]
   }
   ```
   This is flexible enough to allow one app to have access to multiple configurations and to have different tokens per profile (dev vs prod)
@@ -22,14 +24,14 @@ The JWT support is as follows:
 
 - You can use a website like https://jwt.io/ to generate tokens.
 
-If you are interested in accepting HTTPS traffic, [this is a good guide](https://drissamri.be/blog/java/enable-https-in-spring-boot/) on how to enable it.
+It's highly recommended that you configure the image to accept HTTPS traffic. You can configure it like any Spring Boot application, if you are not familiar, [this is a good guide](https://drissamri.be/blog/java/enable-https-in-spring-boot/) on how to enable it.
 
 ## Usage
 ```
 docker run -it --name=spring-cloud-config-server \
       -p 8888:8888 \
       -v </path/to/config>:/config \
-      hyness/spring-cloud-config-server
+      epignosisx/spring-cloud-config-server-jwt
 ```
 
 #### Parameters
@@ -45,22 +47,22 @@ Spring Cloud Config Server is a normal Spring Boot application, it can be config
 # Using a mounted config Directory
 docker run -it -p 8888:8888 \
       -v /path/to/config/dir:/config \
-      hyness/spring-cloud-config-server
+      epignosisx/spring-cloud-config-server-jwt
 
 # Using a mounted application.yml
 docker run -it -p 8888:8888 \
       -v /path/to/application.yml:/config/application.yml \
-      hyness/spring-cloud-config-server
+      epignosisx/spring-cloud-config-server-jwt
 
 # Configure through environment variables without a configuration file
 docker run -it -p 8888:8888 \
       -e SPRING_CLOUD_CONFIG_SERVER_GIT_URI=https://github.com/spring-cloud-samples/config-repo \
       -e JWT_SECRET=your-signing-key \
-      hyness/spring-cloud-config-server
+      epignosisx/spring-cloud-config-server-jwt
 
 # Configure through command line arguments without a configuration file
 docker run -it -p 8888:8888 \
-      hyness/spring-cloud-config-server \
+      epignosisx/spring-cloud-config-server-jwt \
       --spring.cloud.config.server.git.uri=https://github.com/spring-cloud-samples/config-repo \
       --jwt.secret=your-signing-key
 ```
@@ -77,13 +79,13 @@ Spring Cloud Config Server **requires** that you configure a backend to serve yo
 # Github example
 docker run -it -p 8888:8888 \
       -e SPRING_CLOUD_CONFIG_SERVER_GIT_URI=https://github.com/spring-cloud-samples/config-repo \
-      hyness/spring-cloud-config-server
+      epignosisx/spring-cloud-config-server-jwt
 
 # Local git repo example
 docker run -it -p 8888:8888 \
       -v /path/to/config/files/dir:/config \
       -e SPRING_CLOUD_CONFIG_SERVER_GIT_URI=file:/config/my-local-git-repo \
-      hyness/spring-cloud-config-server
+      epignosisx/spring-cloud-config-server-jwt
 ```
 
 #### Filesystem
@@ -91,12 +93,12 @@ docker run -it -p 8888:8888 \
 docker run -it -p 8888:8888 \
       -v /path/to/config/files/dir:/config \
       -e SPRING_PROFILES_ACTIVE=native \
-      hyness/spring-cloud-config-server
+      epignosisx/spring-cloud-config-server-jwt
 ```
 
 #### Vault
 ```
 docker run -it -p 8888:8888 \
       -e SPRING_PROFILES_ACTIVE=vault \
-      hyness/spring-cloud-config-server
+      epignosisx/spring-cloud-config-server-jwt
 ```
