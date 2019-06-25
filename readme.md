@@ -29,13 +29,13 @@ It's highly recommended that you configure the image to accept HTTPS traffic. Yo
 ## Usage
 ```
 docker run -it --name=spring-cloud-config-server \
-      -p 8888:8888 \
+      -p 80:80 \
       -v </path/to/config>:/config \
       epignosisx/spring-cloud-config-server-jwt
 ```
 
 #### Parameters
-* `-p 8888` Server port
+* `-p 80` Server port
 * `-v /config` Mounted configuration
 
 ###  Configuring Spring Cloud Config Server
@@ -45,30 +45,30 @@ Spring Cloud Config Server is a normal Spring Boot application, it can be config
 #### Configuration examples
 ```
 # Using a mounted config Directory
-docker run -it -p 8888:8888 \
+docker run -it -p 80:80 \
       -v /path/to/config/dir:/config \
       epignosisx/spring-cloud-config-server-jwt
 
 # Using a mounted application.yml
-docker run -it -p 8888:8888 \
+docker run -it -p 80:80 \
       -v /path/to/application.yml:/config/application.yml \
       epignosisx/spring-cloud-config-server-jwt
 
 # Configure through environment variables without a configuration file
-docker run -it -p 8888:8888 \
+docker run -it -p 80:80 \
       -e SPRING_CLOUD_CONFIG_SERVER_GIT_URI=https://github.com/spring-cloud-samples/config-repo \
       -e JWT_SECRET=your-signing-key \
       epignosisx/spring-cloud-config-server-jwt
 
 # Configure through command line arguments without a configuration file
-docker run -it -p 8888:8888 \
+docker run -it -p 80:80 \
       epignosisx/spring-cloud-config-server-jwt \
       --spring.cloud.config.server.git.uri=https://github.com/spring-cloud-samples/config-repo \
       --jwt.secret=your-signing-key
 ```
 #### Verify Samples Above
 ```
-$ curl --header "Authorization Bearer <Enter JWT>" http://localhost:8888/foo/development
+$ curl --header "Authorization Bearer <Enter JWT>" http://localhost/foo/development
 ```
 
 ### Required Backend Configuration
@@ -77,12 +77,12 @@ Spring Cloud Config Server **requires** that you configure a backend to serve yo
 #### Git
 ```
 # Github example
-docker run -it -p 8888:8888 \
+docker run -it -p 80:80 \
       -e SPRING_CLOUD_CONFIG_SERVER_GIT_URI=https://github.com/spring-cloud-samples/config-repo \
       epignosisx/spring-cloud-config-server-jwt
 
 # Local git repo example
-docker run -it -p 8888:8888 \
+docker run -it -p 80:80 \
       -v /path/to/config/files/dir:/config \
       -e SPRING_CLOUD_CONFIG_SERVER_GIT_URI=file:/config/my-local-git-repo \
       epignosisx/spring-cloud-config-server-jwt
@@ -90,7 +90,7 @@ docker run -it -p 8888:8888 \
 
 #### Filesystem
 ```
-docker run -it -p 8888:8888 \
+docker run -it -p 80:80 \
       -v /path/to/config/files/dir:/config \
       -e SPRING_PROFILES_ACTIVE=native \
       epignosisx/spring-cloud-config-server-jwt
@@ -98,7 +98,7 @@ docker run -it -p 8888:8888 \
 
 #### Vault
 ```
-docker run -it -p 8888:8888 \
+docker run -it -p 80:80 \
       -e SPRING_PROFILES_ACTIVE=vault \
       epignosisx/spring-cloud-config-server-jwt
 ```
