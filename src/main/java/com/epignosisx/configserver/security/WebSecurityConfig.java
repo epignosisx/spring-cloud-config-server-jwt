@@ -30,6 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.jwtProperties))
                 .authorizeRequests()
+                .antMatchers("/actuator/**").permitAll()
                 .requestMatchers(new AntRequestMatcher()).permitAll()
                 .anyRequest().denyAll();
     }
