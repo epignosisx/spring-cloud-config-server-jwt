@@ -5,7 +5,8 @@ Based on the [hyness/spring-cloud-config-server](https://hub.docker.com/r/hyness
 
 The JWT support is as follows: 
 
-- Update the application.yml to have a `jwt.secret=the-signing-key` with the JWT signing key or use environment variable `JWT_SECRET=the-signing-key`.
+- Update the application.yml to have a `jwt.secret=the-signing-key` with the JWT signing key or use environment variable `JWT_SECRET=the-signing-key`. You can have a comma-separated list of secrets to enable secret rotation.
+
 - The JWT must have a scope property with an array of [ant path patterns](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/AntPathMatcher.html) of allowed urls:
   ```json
   {
@@ -15,11 +16,11 @@ The JWT support is as follows:
   ```
   This is flexible enough to allow one app to have access to multiple configurations and to have different tokens per profile (dev vs prod)
 
-- The signing key algorithm is HS512.
+- The signing key algorithm is HS512. The default secret is SomeSecretForJWTGeneration. Make sure to change it!
 
 - Sample request
   ```shell
-  curl --header "Authorization: Bearer <Enter JWT>" http://localhost:8080/foo/development
+  curl --header "Authorization: Bearer <JWT>" http://localhost/foo/development
   ``` 
 
 - You can use a website like https://jwt.io/ to generate tokens.
