@@ -62,16 +62,28 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             return null;
         }
 
-        // parse the token and validate it
-        String secret = this.jwtProperties.getSecret();
+        String[] secrets = this.jwtProperties.getSecrets();
+        if (secrets.length == 0) {
+            logger.warn("Secret not configured");
+            return null;
+        }
 
-        DecodedJWT decodedJwt;
-        try {
-            decodedJwt = JWT.require(HMAC512(secret.getBytes()))
-                    .build()
-                    .verify(token);
-        } catch (Exception ex) {
-            logger.warn("Token verification failed");
+        // parse the token and validate it
+        DecodedJWT decodedJwt = null;
+        for (int i = 0; i < secrets.length; i++) {
+            try {
+                decodedJwt = JWT.require(HMAC512(secrets[i].getBytes()))
+                        .build()
+                        .verify(token);
+
+                logger.trace("Token verification passed against secret #" + (i + 1));
+                break;
+            } catch (Exception ex) {
+                logger.warn("Token verification failed against secret #" + (i + 1));
+            }
+        }
+
+        if (decodedJwt == null) {
             return null;
         }
 
